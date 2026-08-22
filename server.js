@@ -7,7 +7,7 @@ app.use(cors());
 app.use(express.json());
 
 const SUPABASE_URL = "https://smnoqjpcphpoaronpfaz.supabase.co";
-const SUPABASE_SERVICE_KEY = "sb_secret_i1qvhGVfZXuPUgdyOMOClw_3G-25WFq";
+const SUPABASE_SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNtbm9xanBjcGhwb2Fyb25wZmF6Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NzQxNDM2NywiZXhwIjoyMTAyOTkwMzY3fQ.HwLKT08irZOBlW2yfJqmyhEV9ui76HcjzPDnHA4moxk";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
