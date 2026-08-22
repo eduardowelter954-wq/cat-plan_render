@@ -23,8 +23,21 @@ app.post('/api/auth', async (req, res) => {
     }
 
     try {
-        console.log(`Tentando salvar o usuário no Supabase: ${username}`);
+        console.log(`Verificando usuário no Supabase: ${username}`);
 
+        // 1. Verifica se o usuário já existe no banco
+        const { data: usuarioExistente } = await supabase
+            .from('usuarios')
+            .select('*')
+            .eq('username', username)
+            .maybeSingle();
+
+        if (usuarioExistente) {
+            console.log(`Usuário já cadastrado, login permitido: ${username}`);
+            return res.json({ mensagem: "Login realizado com sucesso!", status: "ok" });
+        }
+
+        // 2. Se não existe, cadastra o novo usuário
         const { error: erroInsercao } = await supabase
             .from('usuarios')
             .insert([{ username, password }]);
@@ -34,8 +47,8 @@ app.post('/api/auth', async (req, res) => {
             return res.status(500).json({ mensagem: "Erro ao salvar usuário no banco." });
         }
 
-        console.log(`Usuário salvo com sucesso no Supabase: ${username}`);
-        return res.json({ mensagem: "Login realizado com sucesso!", status: "ok" });
+        console.log(`Novo usuário salvo com sucesso: ${username}`);
+        return res.json({ mensagem: "Cadastro e login realizados com sucesso!", status: "ok" });
 
     } catch (error) {
         console.error('Erro crítico no servidor:', error);
