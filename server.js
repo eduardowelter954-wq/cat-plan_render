@@ -1,31 +1,50 @@
 const express = require('express');
 const cors = require('cors');
+const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
 
-// Configurações para o servidor entender os dados do front-end
 app.use(cors());
 app.use(express.json());
 
-// Rota básica para o Render saber que o servidor está vivo
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+
 app.get('/', (req, res) => {
-    res.send('Servidor do Cat-Plan está online na nuvem! 🐈‍⬛');
+    res.send('Servidor do Cat-Plan conectado ao Supabase! 🐈‍⬛');
 });
 
-// Rota que vai receber os dados de login/cadastro
-app.post('/api/auth', (req, res) => {
+app.post('/api/auth', async (req, res) => {
     const { username, password } = req.body;
-    
-    // Por enquanto, vamos apenas ver se a informação chegou!
-    console.log(`Tentativa de acesso recebida - Usuário: ${username}, Senha: ${password}`);
-    
-    // Responde ao front-end para ele não ficar carregando infinitamente
-    res.json({ mensagem: "Dados recebidos pelo servidor com sucesso!" });
+
+    if (!username || !password) {
+        return res.status(400).json({ mensagem: "Usuário e senha são obrigatórios!" });
+    }
+
+    try {
+        console.log(`Tentando salvar o usuário no Supabase: ${username}`);
+
+        const { error: erroInsercao } = await supabase
+            .from('usuarios')
+            .insert([{ username, password }]);
+
+        if (erroInsercao) {
+            console.error('Erro ao inserir no Supabase:', erroInsercao);
+            return res.status(500).json({ mensagem: "Erro ao salvar usuário no banco." });
+        }
+
+        console.log(`Usuário salvo com sucesso no Supabase: ${username}`);
+        return res.json({ mensagem: "Login realizado com sucesso!", status: "ok" });
+
+    } catch (error) {
+        console.error('Erro crítico no servidor:', error);
+        res.status(500).json({ mensagem: "Erro interno no servidor." });
+    }
 });
 
-// PORTA DINÂMICA: Essencial para o Render funcionar!
 const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, () => {
-    console.log(`Servidor do Cat-Plan rodando na porta ${PORT}! 🐈‍⬛`);
+    console.log(`Servidor rodando na porta ${PORT}! 🐈‍⬛`);
 });
