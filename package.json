@@ -1,12 +1,13 @@
 {
-  "name": "cat-plan-backend",
+  "name": "cat-plan_render",
   "version": "1.0.0",
-  "description": "Servidor back-end do Cat-Plan",
+  "description": "Servidor do Cat-Plan",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.39.8",
     "cors": "^2.8.5",
     "express": "^4.19.2"
   }
