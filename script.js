@@ -24,42 +24,21 @@ app.post('/api/auth', async (req, res) => {
     }
 
     try {
-        console.log(`Buscando usuário no Supabase: ${username}`);
-        
-        // Usamos .maybeSingle() em vez de .single() para não dar erro se o usuário não existir
-        const { data: usuarioExistente, error: erroBusca } = await supabase
+        console.log(`Tentando salvar o usuário: ${username}`);
+
+        // Insere diretamente na tabela 'usuarios' do Supabase
+        const { error: erroInsercao } = await supabase
             .from('usuarios')
-            .select('*')
-            .eq('username', username)
-            .maybeSingle();
+            .insert([{ username, password }]);
 
-        if (erroBusca) {
-            console.error('Erro ao buscar no Supabase:', erroBusca);
-            return res.status(500).json({ mensagem: "Erro ao consultar banco de dados." });
+        if (erroInsercao) {
+            console.error('Erro ao inserir no Supabase:', erroInsercao);
+            return res.status(500).json({ mensagem: "Erro ao salvar usuário no banco." });
         }
 
-        if (usuarioExistente) {
-            if (usuarioExistente.password === password) {
-                console.log(`Login bem-sucedido para: ${username}`);
-                return res.json({ mensagem: "Login realizado com sucesso!", status: "ok" });
-            } else {
-                return res.status(401).json({ mensagem: "Senha incorreta!" });
-            }
-        } else {
-            console.log(`Usuário não encontrado. Criando novo cadastro para: ${username}`);
-            
-            const { error: erroInsercao } = await supabase
-                .from('usuarios')
-                .insert([{ username, password }]);
+        console.log(`Usuário salvo com sucesso no Supabase: ${username}`);
+        return res.json({ mensagem: "Login realizado com sucesso!", status: "ok" });
 
-            if (erroInsercao) {
-                console.error('Erro ao inserir no Supabase:', erroInsercao);
-                return res.status(500).json({ mensagem: "Erro ao salvar novo usuário." });
-            }
-
-            console.log(`Novo usuário cadastrado com sucesso: ${username}`);
-            return res.json({ mensagem: "Cadastro realizado com sucesso!", status: "ok" });
-        }
     } catch (error) {
         console.error('Erro crítico no servidor:', error);
         res.status(500).json({ mensagem: "Erro interno no servidor." });
