@@ -3,17 +3,16 @@ const cors = require('cors');
 const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+const SUPABASE_URL = "https://smnoqjpcphoaronpfaz.supabase.co";
+const SUPABASE_SERVICE_KEY = "sb_secret_Du40aKuKpxXtfdhR-KCy1Q_c7ijCPkm";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
 app.get('/', (req, res) => {
-    res.send('Servidor do Cat-Plan conectado ao Supabase! 🐈‍⬛');
+    res.send('Servidor do Cat-Plan conectado ao Supabase!');
 });
 
 app.post('/api/auth', async (req, res) => {
@@ -46,5 +45,5 @@ app.post('/api/auth', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}! 🐈‍⬛`);
+    console.log(`Servidor rodando na porta ${PORT}!`);
 });
