@@ -1,31 +1,13 @@
 {
-  "name": "cat-plan",
+  "name": "cat-plan-backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "script.js",
+  "description": "Servidor back-end do Cat-Plan",
+  "main": "server.js",
   "scripts": {
-    "dev": "vite"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "devDependencies": {
-    "vite": "^8.2.1"
+    "start": "node server.js"
   },
   "dependencies": {
-    "cors": "^2.8.6",
-    "detect-libc": "^2.1.2",
-    "express": "^5.2.1",
-    "fdir": "^6.5.0",
-    "lightningcss": "^1.33.0",
-    "lightningcss-win32-x64-msvc": "^1.33.0",
-    "nanoid": "^3.3.18",
-    "picocolors": "^1.1.1",
-    "picomatch": "^4.0.5",
-    "postcss": "^8.5.26",
-    "rolldown": "^1.2.5",
-    "source-map-js": "^1.2.1",
-    "tinyglobby": "^0.2.17"
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
   }
 }
